@@ -1,0 +1,23 @@
+name: Test Katran P4 Load Balancer
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang llvm libpcap-dev python3-scapy
+
+      - name: Compile P4 to eBPF
+        run: |
+          cd src
+          ./../scripts/build.sh
+
+      - name: Run Scapy test
+        run: |
+          cd src/test
+          python3 test_katran.py
